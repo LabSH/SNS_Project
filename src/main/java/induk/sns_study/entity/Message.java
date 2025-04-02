@@ -1,0 +1,32 @@
+package induk.sns_study.entity;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Message {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    private ChatRoom chatRoom;
+
+    @ManyToOne
+    private MemberEntity sender;
+
+    private String content;
+    private LocalDateTime timestamp;
+
+}

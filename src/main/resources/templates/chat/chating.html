@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/chating.css" rel="stylesheet">
+    <title>채팅방</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.1/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="/js/chat.js"></script>
+</head>
+ <!-- WebSocket 관련 JS -->
+<body>
+
+<div class="chat-container">
+    <header>채팅방</header>
+    <div class="chat-partner">대화 상대: <span id="targetName" th:text="${targetId}"></span></div>
+    <main id="chat-box">
+        <!-- 채팅 메시지가 동적으로 추가될 영역 -->
+    </main>
+    <footer>
+        <input type="text" id="message-input" placeholder="메시지를 입력하세요..." onkeypress="handleEnter(event)">
+        <button onclick="sendMessage()">전송</button>
+    </footer>
+</div>
+
+<script>
+    var senderId = "[[${senderId}]]";   // 보내는 사람 ID
+    var targetId = "[[${targetId}]]"; // 받는 사람 ID
+    console.log(senderId, targetId);
+    initChat(senderId, targetId); // chat.js에서 정의된 함수 호출
+</script>
+
+</body>
+</html>

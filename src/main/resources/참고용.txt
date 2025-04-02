@@ -1,0 +1,56 @@
+1. 타임리프 문법 잘못 사용했을경우 그 템플릿에 대한 일부분이 이상하게됨.
+2. api 호출을 할때에는 맨 앞에 / 붙여야함.
+3. 컨트롤러에서 매핑 맨 앞에 / X.
+4. 컨트롤러의 리턴값에는 index여도 index라고 지정해줘야함
+
+
+[DTO]
+내가 가지고 노는 데이터 형식
+클라이언트와 서버 간 데이터를 주고받을 때 사용하는 객체.
+
+[Entity]
+서버에서 저장하는 데이터 모델로, JPA와 같은 ORM에서 테이블과 매핑됨.
+서버에서 저장하고 있는 데이터 형식
+
+[Repository]
+JpaRepository를 상속받아 다양한 메서드를 사용한다.
+여기에 기본적인 CRUD는 전부 정의되어있다.
+[구성 참조] https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/CrudRepository.html
+
+[Controller]
+1. Http요청을 받고 제데로 요청됐는지 확인 후 서비스클래스에게 받은 데이터 전달
+4. 서비스에게 받은 리턴값을 출력
+
+[Service]
+2. 데이터 접근 및 직접적인 비지니스 로직을 작성해 여기서 처리
+3. 처리 결과 데이터를 처리후 컨트롤러에게 반환
+
+[Controller, Service]
+서비스 패키지가 존재하는것은 컨트롤러클래스에 전체로직을 전부 넣게된다면 너무 길어지고 보기 힘들어지므로 서비스클래스에게 역할을 분배
+
+[결론]
+Controller : Http요청[Get, Post, Put...] 과 API요청[/admin_member, /, ...]을 받는다.
+             요청 데이터 검증과 예외 처리 역할을 수행
+Service : 데이터에 직접적인 처리 후 가공된 데이터를 컨트롤러에게 반환.
+
+
+[save]
+Spring에서 save라는 메서드는 유동적이다.
+id O update
+id X insert
+아이디가 존재한다면 업데이트 없다면 인서트로 유동적이다,
+
+
+[MemberRepository 기능구현] < 미래, 코더와 프로그래머>
+지금은 단지 JpaRepository를 상속받아 기존에 있던 메서드를 사용하는 방식이다.
+하지만 기존에 있던 메서드를 사용하는 것보단 이 코드에 맞는 최적화된 기능을 구현하는것이 더 좋고 성능이 높을것이다.
+그 기업에서는 그 부분에서 조금더 좋게 보일 수 밖에없다.
+다음 이 프로젝트를 연계해서 진행할 경우 내가 CRUD를 구현하는것을 Best.
+
+[서비스 클래스의 메서드를 사용하고싶을떄]
+private final MemberService memberService;
+여러개의 서비스 클래스에서 기능을 가져다 사용할수있는듯?
+
+
+[JPQL (Java Persistence Query Language)]
+JPA에서 데이터를 조회하거나 조작할 때 사용하는 쿼리 언어

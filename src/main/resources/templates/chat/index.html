@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/img/favicon.ico">
+    <title>KSH - First Spring Boot Blog</title>
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Fonts -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i" rel="stylesheet">
+
+
+    <!-- Custom styles for this template -->
+    <link href="/css/mediumish.css" rel="stylesheet">
+    <link href="/css/chat.css" rel="stylesheet">
+
+    <!-- 소켓 -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+
+</head>
+
+<!-- Begin Nav
+================================================== -->
+<th:block th:replace="~{/user_topbar}"></th:block>
+<!-- End Nav
+================================================== -->
+
+</head>
+<body>
+<div class="container_ch">
+    <!-- 헤더 -->
+    <div class="header_ch">
+        <h2>멤버 <span th:text="${number}"></span></h2>
+        <span class="settings_ch">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pin-angle" viewBox="0 0 16 16">
+            <path d="M9.828.722a.5.5 0 0 1 .354.146l4.95 4.95a.5.5 0 0 1 0 .707c-.48.48-1.072.588-1.503.588-.177 0-.335-.018-.46-.039l-3.134 3.134a6 6 0 0 1 .16 1.013c.046.702-.032 1.687-.72 2.375a.5.5 0 0 1-.707 0l-2.829-2.828-3.182 3.182c-.195.195-1.219.902-1.414.707s.512-1.22.707-1.414l3.182-3.182-2.828-2.829a.5.5 0 0 1 0-.707c.688-.688 1.673-.767 2.375-.72a6 6 0 0 1 1.013.16l3.134-3.133a3 3 0 0 1-.04-.461c0-.43.108-1.022.589-1.503a.5.5 0 0 1 .353-.146m.122 2.112v-.002zm0-.002v.002a.5.5 0 0 1-.122.51L6.293 6.878a.5.5 0 0 1-.511.12H5.78l-.014-.004a5 5 0 0 0-.288-.076 5 5 0 0 0-.765-.116c-.422-.028-.836.008-1.175.15l5.51 5.509c.141-.34.177-.753.149-1.175a5 5 0 0 0-.192-1.054l-.004-.013v-.001a.5.5 0 0 1 .12-.512l3.536-3.535a.5.5 0 0 1 .532-.115l.096.022c.087.017.208.034.344.034q.172.002.343-.04L9.927 2.028q-.042.172-.04.343a1.8 1.8 0 0 0 .062.46z"/>
+            </svg>
+        </span>
+    </div>
+
+    <!-- 검색 및 버튼 -->
+    <form id="searchMemberForm" th:action="@{/chat/search}" method="get">
+    <div class="search-section_ch">
+        <input type="text" name="name" value="" placeholder="멤버 검색">
+        <span class="search-icon_ch" onclick="document.getElementById('searchMemberForm').submit();">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+            </svg>
+        </span>
+    </div>
+    </form>
+
+
+    <!-- 내 정보 -->
+    <div class="member-list_ch">
+        <div class="member-item_ch">
+            <img src="https://www.gravatar.com/avatar/?s=250&amp;d=mm&amp;r=x" alt="프로필 이미지">
+            <div class="member-info_ch">
+                <span class="name_ch" th:text="${member.name}">이름</span>
+                <span class="status_ch online_ch"></span>
+                <div class="id" th:text="${member.email}">이메일</div>
+            </div>
+            <span class="more-options_ch">수정</span>
+        </div>
+    </div>
+
+    <!-- 회원 리스트  -->
+    <div class="member-list_ch" th:each="memberList : ${memberList}">
+        <input type="hidden" id="target" th:value="${memberList.id}"> <!-- 보내는 사람ID  -->
+        <div class="member-item_ch">
+            <img src="https://www.gravatar.com/avatar/?s=250&amp;d=mm&amp;r=x" alt="프로필 이미지">
+            <div class="member-info_ch">
+                <span class="name_ch" th:text="${memberList.name}">이름</span>
+                <span class="status_ch offline_ch"></span>
+                <div class="id" th:text="${memberList.email}">이메일</div>
+            </div>
+            <span class="more-options_ch" th:attr="onclick='openPopup(\'' + ${memberList.id} + '\', \'' + ${memberList.name} + '\')'">1:1 채팅</span>
+        </div>
+    </div>
+</div>
+<script>
+    function openPopup(targetId, targetName) {
+        var senderId = "[[${session.memberId}]]";
+        var url = "/popup?senderId=" + encodeURIComponent(senderId) + "&targetId=" + encodeURIComponent(targetId) + "&targetName=" + encodeURIComponent(targetName);
+        window.open(url, 'popupWindow', 'width=400,height=600,scrollbars=yes');
+    }
+</script>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!--<script src="/js/jquery.min.js"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<!--<script src="/js/bootstrap.min.js"></script>-->
+<script src="/js/ie10-viewport-bug-workaround.js"></script>
+<!--<script src="/js/mediumish.js"></script>-->
+</body>
+</html>

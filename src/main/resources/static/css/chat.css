@@ -1,0 +1,250 @@
+.container_ch {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+/* 헤더 스타일 */
+.header_ch {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header_ch h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.header_ch h2 span {
+    color: #3b82f6;
+}
+
+.header_ch .settings_ch {
+    font-size: 20px;
+    color: #888;
+    cursor: pointer;
+}
+
+/* 검색 및 버튼 섹션 */
+.search-section_ch {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px 10px;
+    background-color: #fff;
+}
+
+.search-section_ch .label_ch {
+    font-size: 14px;
+    color: #666;
+    margin-right: 10px;
+    white-space: nowrap;
+}
+
+.search-section_ch input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    background-color: transparent;
+}
+
+.search-section_ch .search-icon_ch {
+    font-size: 16px; /* 크기를 약간 키워 돋보기 모양을 강조 */
+    color: #666; /* 회색으로 설정 */
+    cursor: pointer;
+    line-height: 1; /* 세로 정렬 조정 */
+}
+
+/* 회원 그룹 보기 버튼 */
+.group-view_ch {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+}
+
+.group-view_ch .icon_ch {
+    font-size: 20px;
+    margin-right: 5px;
+}
+
+/* 회원 리스트 스타일 */
+.member-list_ch {
+    display: flex;
+    flex-direction: column;
+}
+
+.member-item_ch {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.member-item_ch img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    background-color: #ddd;
+}
+
+.member-info_ch {
+    flex: 1;
+}
+
+.member-info_ch .name_ch {
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.member-info_ch .status_ch {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.member-info_ch .status_ch.online_ch {
+    background-color: #22c55e;
+}
+
+.member-info_ch .status_ch.offline_ch {
+    background-color: #d1d5db;
+}
+
+.member-info_ch .id_ch {
+    font-size: 12px;
+    color: #666;
+}
+
+.more-options_ch {
+    font-size: 15px;
+    color: #888;
+    cursor: pointer;
+}
+
+
+
+
+
+
+.modal_ch {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+.modal-content_ch {
+    background-color: #ffffff;
+    margin: 10% auto;
+    padding: 20px;
+    width: 380px;
+    border-radius: 12px;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+    animation: fadeIn_ch 0.3s ease-in-out;
+}
+@keyframes fadeIn_ch {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.modal-header_ch {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.header-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header_ch h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
+}
+
+.modal-header_ch p#chatMemberName {
+    margin: 0;
+    font-size: 16px;
+    color: #666;
+    margin-top: 5px;
+}
+.close_ch {
+    cursor: pointer;
+    font-size: 22px;
+    font-weight: bold;
+    color: #555;
+    transition: 0.3s;
+}
+.close_ch:hover {
+    color: #d9534f;
+}
+.chat-box_ch {
+    height: 280px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 12px;
+    margin: 15px 0;
+    border-radius: 8px;
+    background-color: #fafafa;
+}
+.input-box_ch {
+    display: flex;
+    gap: 8px;
+}
+.input-box_ch input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+.input-box_ch button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.input-box_ch button:hover {
+    background-color: #0056b3;
+}
+.chat-button_ch {
+    padding: 12px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #28a745;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.chat-button_ch:hover {
+    background-color: #218838;
+}
+
+
