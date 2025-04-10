@@ -98,66 +98,41 @@
 //     }
 // }
 
-
-
 var stompClient = null;
-console.log("chat.js 진입!");
 
 function initChat(senderId, targetId) {
-    var socket = new SockJS('/ws/chat'); // Spring WebSocket 엔드포인트
+    var socket = new SockJS('/ws/chat');
     stompClient = Stomp.over(socket);
 
-
     stompClient.connect({}, function (frame) {
-        console.log('Connected: ' + frame);
+        console.log('✅ 연결됨: ' + frame);
 
-        // 자신의 구독 경로 설정 (senderId로 고유 식별)
-        stompClient.subscribe('/user/' + senderId + '/queue/messages', function(message) {
+        // 자신 메시지 수신용 구독
+        stompClient.subscribe('/user/queue/messages', function (message) {
             var chatMessage = JSON.parse(message.body);
-            console.log('수신된 메시지: ', chatMessage);
-            showMessage(chatMessage); // 서버에서 온 메시지를 화면에 표시
+            showMessage(chatMessage);
         });
-        console.log("✅ " + senderId + "번 사용자가 '/user/" + senderId + "/queue/messages' 경로를 구독");
 
-        console.log("✅ 채팅 구독 완료:", senderId);
+        console.log("📩 구독 경로: /user/queue/messages");
     });
 }
 
 function sendMessage() {
-    var messageContent = document.getElementById("message-input").value;
-
-    if (messageContent && stompClient) {
+    var content = document.getElementById("message-input").value;
+    if (content && stompClient) {
         var chatMessage = {
-            senderId: senderId,
             targetId: targetId,
-            content: messageContent,
+            content: content
         };
-
-        console.log("📩 메시지 전송:", chatMessage);
-        console.log("메시지를 '/user/" + targetId + "/queue/messages' 경로로 전송");
-
         stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
         document.getElementById("message-input").value = '';
     }
 }
 
 function showMessage(message) {
-    console.log("📩 showMessage 호출됨");
-    console.log('받은 메시지의 보낸 사람 ID:', message.senderId); // 메시지를 보낸 사람 ID
-    console.log('현재 채팅을 보내는 사람 ID:', senderId); // 현재 채팅을 보내고 있는 사람 ID
-    console.log('메시지 내용:', message.content); // 메시지 내용
-
-
     var chatBox = document.getElementById("chat-box");
-
-    if (!chatBox) {
-        console.error("❌ chat-box 요소를 찾을 수 없습니다!");
-        return;
-    }
-
     var messageElement = document.createElement("div");
 
-    // 📌 메시지가 보낸 사람이면 'sent', 받는 사람이면 'received' 클래스 추가
     messageElement.classList.add("message");
     if (message.senderId === senderId) {
         messageElement.classList.add("sent");
@@ -165,7 +140,6 @@ function showMessage(message) {
         messageElement.classList.add("received");
     }
 
-    // 📌 보낸 사람 ID + 메시지 내용 추가
     var senderInfo = document.createElement("strong");
     senderInfo.textContent = message.senderId + ": ";
 
@@ -174,11 +148,8 @@ function showMessage(message) {
 
     messageElement.appendChild(senderInfo);
     messageElement.appendChild(messageContent);
-
-    // 📌 메시지를 채팅 박스에 추가
     chatBox.appendChild(messageElement);
 
-    // 📌 스크롤 자동 이동
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
@@ -187,6 +158,8 @@ function handleEnter(event) {
         sendMessage();
     }
 }
+
+
 
 
 

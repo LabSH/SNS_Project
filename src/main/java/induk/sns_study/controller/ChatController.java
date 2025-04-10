@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,10 +107,14 @@ public class ChatController {
     @Autowired
     private SimpUserRegistry simpUserRegistry;
 
-
-    //@DestinationVariable
+    /**
+     * /app/chat.sendMessage 로 들어온 메시지를 처리
+     */
     @MessageMapping("/chat.sendMessage")
-    public void sendMessage(@Payload ChatMessageDTO chatMessage) {
+    public void sendMessage(@Payload ChatMessageDTO chatMessage, Principal principal) {
+        String senderId = principal.getName(); // 현재 로그인한 사용자 ID (ChatHandshakeHandler에서 설정됨)
+        chatMessage.setSenderId(senderId);
+
         System.out.println("📨 메시지 전송됨: " + chatMessage);
         System.out.println("타겟 사용자 ID: " + chatMessage.getTargetId());
         System.out.println("보낸 사람 ID: " + chatMessage.getSenderId());
@@ -119,7 +124,7 @@ public class ChatController {
         messagingTemplate.convertAndSendToUser(
                 chatMessage.getTargetId(), "/queue/messages", chatMessage);
 
-        // 보낸 사람에게 메시지 전송
+        // 보낸 사람에게도 메시지를 전송 (본인 채팅창 갱신용 등)
         System.out.println("보낸 사람 " + chatMessage.getSenderId() + "에게 메시지 전송 시도");
         messagingTemplate.convertAndSendToUser(
                 chatMessage.getSenderId(), "/queue/messages", chatMessage);
