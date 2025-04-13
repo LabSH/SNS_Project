@@ -3,7 +3,9 @@ package induk.sns_study.controller;
 
 import induk.sns_study.dto.BoardDTO;
 import induk.sns_study.dto.ChatMessageDTO;
+import induk.sns_study.dto.ChatRoomDTO;
 import induk.sns_study.dto.MemberDTO;
+import induk.sns_study.service.ChatRoomService;
 import induk.sns_study.service.MemberService;
 import induk.sns_study.service.MessageService;
 import jakarta.servlet.http.HttpSession;
@@ -32,6 +34,7 @@ import java.util.List;
 public class ChatController {
 
     private final MemberService memberService;
+    private final ChatRoomService chatRoomService;
     private final MessageService messageService;
 
     @GetMapping("chat")
@@ -74,24 +77,6 @@ public class ChatController {
         return "chat/index";
     }
 
-
-//    @Autowired
-//    private SimpMessagingTemplate messagingTemplate;
-//
-//    @MessageMapping("/chat")
-//    public void sendMessage(@Payload ChatMessageDTO message) {
-//        String senderId = message.getSenderId();
-//        String targetId = message.getTargetId();
-//
-//        System.out.println("보낸 사람: " + senderId);
-//        System.out.println("대상 사람: " + targetId);
-//        System.out.println("내용: " + message.getContent());
-//
-//        // 보낸 사람에게도 메시지 전송 (자기 자신에게도 보내는 로직)
-//        messagingTemplate.convertAndSendToUser(senderId, "/queue/messages", message);  // /user/{senderId}/queue/messages
-//        messagingTemplate.convertAndSendToUser(targetId, "/queue/messages", message);  // /user/{targetId}/queue/messages
-//    }
-
     @GetMapping("/popup")
     public String openChatPopup(@RequestParam("senderId") String sendId,
                                 @RequestParam("targetId") String targetId,
@@ -104,8 +89,6 @@ public class ChatController {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    @Autowired
-    private SimpUserRegistry simpUserRegistry;
 
     /**
      * /app/chat.sendMessage 로 들어온 메시지를 처리
@@ -128,5 +111,46 @@ public class ChatController {
         System.out.println("보낸 사람 " + chatMessage.getSenderId() + "에게 메시지 전송 시도");
         messagingTemplate.convertAndSendToUser(
                 chatMessage.getSenderId(), "/queue/messages", chatMessage);
+
+        // 채팅 저장 서비스 로직
+        // 이게 저장로직인데 이미 방이있을 경우에는 이 방법을 선택하면 안됨. 이럴경우 계속 방생성함
+        // 그러므로 룸을 찾는 로직도 구현해보겠음
+
+        // 룸 아이디 찾는 기능
+
+
+        Long ChatRoomId = chatRoomService.findByRoomId(chatMessage.getSenderId(), chatMessage.getTargetId());
+
+        System.out.println("기존 채팅방 ID: "+ChatRoomId);
+
+
+        if (ChatRoomId != null) { // 채팅방이 존재 할겅우
+            // 룸 아이디를 가지고 메세지 엔티티에 메세지를 저장
+
+            ChatMessageDTO chatMessageDTO = new ChatMessageDTO();
+            chatMessageDTO.setChatRoomId(ChatRoomId);
+            chatMessageDTO.setSenderId(chatMessage.getSenderId());
+            chatMessageDTO.setContent(chatMessage.getContent());
+            messageService.save(chatMessageDTO);
+
+        }else{ // 채팅방이 없을경우
+            // 처음부터 방을 만들고 채팅을 저장
+            ChatRoomDTO chatRoomDTO = new ChatRoomDTO();
+            chatRoomDTO.setUser1(chatMessage.getSenderId());
+            chatRoomDTO.setUser2(chatMessage.getTargetId());
+            chatRoomService.save(chatRoomDTO);
+
+            // 저장 완료
+            System.out.println("채팅방 DB저장 완료");
+
+            Long secondChatRoomId = chatRoomService.findByRoomId(chatMessage.getSenderId(), chatMessage.getTargetId());
+            System.out.println("새로만든 채팅방 ID: "+secondChatRoomId);
+
+            ChatMessageDTO chatMessageDTO = new ChatMessageDTO();
+            chatMessageDTO.setChatRoomId(secondChatRoomId);
+            chatMessageDTO.setSenderId(chatMessage.getSenderId());
+            chatMessageDTO.setContent(chatMessage.getContent());
+            messageService.save(chatMessageDTO);
+        }
     }
 }

@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class ChatMessageDTO {
+    private Long chatRoomId;
     private String targetId;
     private String senderId;
     private String content;
