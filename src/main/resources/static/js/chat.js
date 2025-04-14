@@ -140,18 +140,36 @@ function showMessage(message) {
         messageElement.classList.add("received");
     }
 
-    var senderInfo = document.createElement("strong");
-    senderInfo.textContent = message.senderId + ": ";
+    // 이름 (말풍선 위)
+    var senderName = (message.senderId === senderId) ? "나" : "상대";
+    var messageName = document.createElement("small");
+    messageName.classList.add("message-name");
+    messageName.textContent = senderName;
 
-    var messageContent = document.createElement("span");
-    messageContent.textContent = message.content;
+    // 말풍선 본문
+    var messageContent = document.createElement("div");
+    messageContent.classList.add("bubble");
+    var contentText = document.createElement("span");
+    contentText.textContent = message.content;
+    messageContent.appendChild(contentText);
 
-    messageElement.appendChild(senderInfo);
+    // 시간 (말풍선 아래)
+    var messageTime = document.createElement("small");
+    messageTime.classList.add("message-time");
+
+    // todo : 여기 시간 부분 해결해야함
+    messageTime.textContent = formatTimestamp(message.timestamp);
+
+    // 메시지 요소에 추가
+    messageElement.appendChild(messageName);
     messageElement.appendChild(messageContent);
+    messageElement.appendChild(messageTime);
+
     chatBox.appendChild(messageElement);
 
     chatBox.scrollTop = chatBox.scrollHeight;
 }
+
 
 function handleEnter(event) {
     if (event.key === "Enter") {

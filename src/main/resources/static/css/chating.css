@@ -48,27 +48,61 @@ main {
 }
 
 .message {
+    display: flex;
+    flex-direction: column;
     max-width: 70%;
-    padding: 12px 15px;
-    border-radius: 15px;
-    line-height: 1.4;
-    position: relative;
-    display: inline-block;
+    align-self: flex-start;
     margin: 5px 0;
     animation: fadeIn 0.3s ease;
 }
 
-.sent {
+/* 보낸 메시지 위치 정렬 */
+.message.sent {
+    align-self: flex-end;
+}
+
+/* 이름 (보낸 메시지는 오른쪽, 받은 메시지는 왼쪽) */
+.message-name {
+    font-size: 11px;
+    color: #555;
+    margin-bottom: 3px;
+    text-align: left;
+}
+
+/* 보낸 메시지 이름은 오른쪽 정렬 */
+.sent .message-name {
+    text-align: right;
+}
+
+/* 시간 (말풍선 아래) */
+.message-time {
+    font-size: 11px;
+    color: #777;
+    margin-top: 3px;
+    text-align: right;
+}
+
+/* 말풍선 본문 */
+.bubble {
+    padding: 12px 15px;
+    line-height: 1.4;
+    border-radius: 15px;
+    display: inline-block;
+    word-wrap: break-word;
+    position: relative;
+}
+
+/* 보낸 메시지 말풍선 */
+.sent .bubble {
     background: #6e8efb;
     color: white;
-    align-self: flex-end;
     border-radius: 15px 15px 0 15px;
 }
 
-.received {
-    background: #ffffff;
-    color: #333;
-    align-self: flex-start;
+/* 받은 메시지 말풍선 */
+.received .bubble {
+    background: #6e8efb;
+    color: white;
     border-radius: 15px 15px 15px 0;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
@@ -113,3 +147,4 @@ footer button:hover {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
+

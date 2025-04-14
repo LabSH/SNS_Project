@@ -17,20 +17,38 @@
     <div class="chat-partner">대화 상대: <span id="targetName" th:text="${targetId}"></span></div>
     <main id="chat-box">
         <!-- 채팅 메시지가 동적으로 추가될 영역 -->
+        <!-- 내가 센드id고 불러오는 채팅 센드id와 같을경우 왼쪽 아닐경우 오른쪽 -->
+        <div th:each="list : ${messageList}"
+             th:class="'message ' + (${list.senderId} == ${senderId} ? 'sent' : 'received')">
+
+            <!-- 이름 (말풍선 위) -->
+            <small class="message-name" th:text="${list.senderId == senderId ? '나' : '상대'}"></small>
+
+            <!-- 말풍선 -->
+            <div class="bubble">
+                <span th:text="${list.content}"></span>
+            </div>
+
+            <!-- 시간 (말풍선 아래) -->
+            <small class="message-time"
+                   th:text="${#temporals.format(list.timestamp, 'HH시 mm분')}">
+            </small>
+        </div>
+
     </main>
-    <footer>
-        <input type="text" id="message-input" placeholder="메시지를 입력하세요..." onkeypress="handleEnter(event)">
-        <button onclick="sendMessage()">전송</button>
-    </footer>
-</div>
+     <footer>
+         <input type="text" id="message-input" placeholder="메시지를 입력하세요..." onkeypress="handleEnter(event)">
+         <button onclick="sendMessage()">전송</button>
+     </footer>
+ </div>
 
-<script>
-    var senderId = "[[${senderId}]]";   // 보내는 사람 ID
-    var targetId = "[[${targetId}]]"; // 받는 사람 ID
-    console.log(senderId, targetId);
-    initChat(senderId, targetId); // chat.js에서 정의된 함수 호출
-</script>
+ <script>
+     var senderId = "[[${senderId}]]";   // 보내는 사람 ID
+     var targetId = "[[${targetId}]]"; // 받는 사람 ID
+     console.log(senderId, targetId);
+     initChat(senderId, targetId); // chat.js에서 정의된 함수 호출
+ </script>
 
 
-</body>
-</html>
+ </body>
+ </html>

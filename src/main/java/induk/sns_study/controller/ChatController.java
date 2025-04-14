@@ -83,6 +83,14 @@ public class ChatController {
                                 Model model) {
         model.addAttribute("senderId", sendId);
         model.addAttribute("targetId", targetId);
+
+        // 메세지 조회를 위한 두 유저간의 채팅방
+        Long ChatRoomId = chatRoomService.findByRoomId(sendId, targetId);
+        // 채팅방 번호를 알아냈으니 그 메세지 엔터티에 채팅방 아이디를 매칭시켜 메세지에 대한 내용을 구함 구하고
+        List<ChatMessageDTO> messageList = messageService.findByMessage(ChatRoomId);
+        System.out.println(messageList);
+        model.addAttribute("messageList", messageList);
+
         return "chat/chating";
     }
 
