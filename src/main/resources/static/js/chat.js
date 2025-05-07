@@ -1,103 +1,3 @@
-// let stompClient = null;
-//
-// console.log("chart.js 진입!");
-//
-// function connectWebSocket() {
-//     if (stompClient && stompClient.connected) {
-//         console.log("✅ 이미 WebSocket이 연결됨!");
-//         return;
-//     }
-//
-//     let socket = new SockJS('/ws-chat');  // Spring Boot WebSocket 엔드포인트
-//     stompClient = Stomp.over(socket);
-//
-//     stompClient.connect({}, function (frame) {
-//         if (!frame) {
-//             console.error("❌ WebSocket 연결 실패!");
-//             return;
-//         }
-//
-//         console.log('✅ WebSocket 연결 성공: ' + frame);
-//
-//         // 구독: 특정 사용자에게만 오는 메시지를 받음
-//         let targetId = document.getElementById("targetId").value; // 대상 사용자 ID
-//         stompClient.subscribe('/user/' + targetId + '/queue/messages', function (message) {
-//             showMessage(JSON.parse(message.body));
-//         });
-//     });
-// }
-//
-// // 메시지 전송
-// function sendMessage() {
-//     let messageContent = document.getElementById("chatInput").value.trim();
-//     let senderId = document.getElementById("senderId").value;
-//     let targetId = document.getElementById("targetId").value;
-//
-//     if (!stompClient || !stompClient.connected) {
-//         console.error("❌ WebSocket이 연결되지 않음. 메시지를 보낼 수 없습니다.");
-//         return;
-//     }
-//
-//     if (messageContent) {
-//         let chatMessage = {
-//             targetId: targetId,
-//             senderId: senderId,
-//             content: messageContent
-//         };
-//         stompClient.send("/app/chat", {}, JSON.stringify(chatMessage));  // /app/chat 경로로 메시지 전송
-//         document.getElementById("chatInput").value = ""; // 입력창 초기화
-//     }
-// }
-//
-// function showMessage(message) {
-//     let chatBox = document.querySelector(".chat-box_ch");
-//
-//     if (!chatBox) {
-//         console.error("❌ chat-box_ch 요소를 찾을 수 없습니다!");
-//         return;
-//     }
-//
-//     console.log("받은 메시지:", message);  // 메시지 확인 로그
-//
-//     let messageElement = document.createElement("p");
-//
-//     // 보낸 사람과 받은 사람 구분
-//     if (message.senderId === document.getElementById("senderId").value) {
-//         messageElement.innerHTML = `<strong>나:</strong> ${message.content}`;
-//         messageElement.style.textAlign = "right";  // 오른쪽 정렬
-//     } else {
-//         messageElement.innerHTML = `<strong>${message.senderId}:</strong> ${message.content}`;
-//         messageElement.style.textAlign = "left";  // 왼쪽 정렬
-//     }
-//
-//     chatBox.appendChild(messageElement);
-//
-//     // 스크롤 자동으로 아래로 이동
-//     chatBox.scrollTop = chatBox.scrollHeight;
-// }
-//
-// // 모달창 열기 & WebSocket 연결
-// function openModal(memberName) {
-//     console.log(document.getElementById("chatMemberName"));
-//     document.getElementById("chatMemberName").textContent = memberName;
-//     document.getElementById("targetId").value = document.getElementById('target').value.trim();
-//
-//     document.getElementById("chatModal").style.display = "block";
-//     if (!stompClient || !stompClient.connected) {
-//         connectWebSocket();
-//     }
-// }
-//
-// // 모달창 닫기
-// function closeModal() {
-//     document.getElementById("chatModal").style.display = "none";
-//
-//     if (stompClient) {
-//         let targetId = document.getElementById("targetId").value;
-//         stompClient.unsubscribe('/user/' + targetId + '/queue/messages'); // 구독 해제
-//     }
-// }
-
 var stompClient = null;
 
 function initChat(senderId, targetId) {
@@ -133,6 +33,8 @@ function showMessage(message) {
     var chatBox = document.getElementById("chat-box");
     var messageElement = document.createElement("div");
 
+
+
     messageElement.classList.add("message");
     if (message.senderId === senderId) {
         messageElement.classList.add("sent");
@@ -141,7 +43,7 @@ function showMessage(message) {
     }
 
     // 이름 (말풍선 위)
-    var senderName = (message.senderId === senderId) ? "나" : "상대";
+    var senderName = (message.senderId === senderId) ? "나" : targetName;
     var messageName = document.createElement("small");
     messageName.classList.add("message-name");
     messageName.textContent = senderName;
@@ -155,10 +57,20 @@ function showMessage(message) {
 
     // 시간 (말풍선 아래)
     var messageTime = document.createElement("small");
-    messageTime.classList.add("message-time");
+    messageTime.classList.add((message.senderId === senderId) ? "message-time-sent" : "message-time-received");
 
-    // todo : 여기 시간 부분 해결해야함
-    messageTime.textContent = formatTimestamp(message.timestamp);
+
+    // 현재 시간을 가져오기
+    const now = new Date();
+
+    // 시와 분 추출
+    const hours = now.getHours().toString().padStart(2, '0'); // 2자리로 포맷 (예: 03)
+    const minutes = now.getMinutes().toString().padStart(2, '0'); // 2자리로 포맷 (예: 05)
+
+    // 시:분 형식으로 출력
+    const time = `${hours}시 ${minutes}분`;
+    console.log(time); // 예: 14:35
+    messageTime.textContent = time
 
     // 메시지 요소에 추가
     messageElement.appendChild(messageName);

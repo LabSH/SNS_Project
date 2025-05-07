@@ -80,9 +80,11 @@ public class ChatController {
     @GetMapping("/popup")
     public String openChatPopup(@RequestParam("senderId") String sendId,
                                 @RequestParam("targetId") String targetId,
+                                @RequestParam("targetName") String targetName,
                                 Model model) {
         model.addAttribute("senderId", sendId);
         model.addAttribute("targetId", targetId);
+        model.addAttribute("targetName", targetName);
 
         // 메세지 조회를 위한 두 유저간의 채팅방
         Long ChatRoomId = chatRoomService.findByRoomId(sendId, targetId);

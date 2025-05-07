@@ -1,0 +1,18 @@
+Spring 웹 개발에서 멤버 서비스 클래스를 만들 때,
+MemberService 인터페이스를 만들고 구현체(MemberServiceImpl 등)에서 implements로 구현하는 방식
+인터페이스 없이 바로 MemberService 클래스에 함수 구현을 다 하는 방식
+이 두 가지 중 어떤 방식이 현업에서 더 많이 쓰이는지에 대해 설명합니다.
+
+MemberService 인터페이스 + 구현체 방식
+현업에서 가장 많이 사용되는 패턴입니다.
+서비스 계층에 인터페이스를 두고, 실제 구현은 별도의 클래스에서 합니다.
+public interface MemberService {
+    void join(Member member);
+    Member findMember(Long memberId);
+}
+
+public class MemberServiceImpl implements MemberService {
+    // 구현부
+}
+
+

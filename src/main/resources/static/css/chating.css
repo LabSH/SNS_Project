@@ -75,11 +75,17 @@ main {
 }
 
 /* 시간 (말풍선 아래) */
-.message-time {
+.message-time-sent {
     font-size: 11px;
     color: #777;
     margin-top: 3px;
     text-align: right;
+}
+.message-time-received {
+    font-size: 11px;
+    color: #777;
+    margin-top: 3px;
+    text-align: left;
 }
 
 /* 말풍선 본문 */
