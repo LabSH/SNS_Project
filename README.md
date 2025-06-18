@@ -4,7 +4,7 @@
 🗓️ 프로젝트 완성 일시: 2025-02-01
 
 # 💻 기술 스택
-- OS: Ubuntu
+- OS: macOS
 - DBMS: MySQL
 - 개발 도구: IntelliJ
 - 주요 기술: Java, Spring Boot, JPA, JavaScript, HTML, Thymeleaf
