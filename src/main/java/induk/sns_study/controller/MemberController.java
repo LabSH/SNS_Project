@@ -6,10 +6,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -67,8 +64,8 @@ public class MemberController {
     }
 
     // 1. 특정 ID 회원 update [ID와 동일한 회원의 정보를 가져온다.]
-    @GetMapping("admin_member/update/{id}")
-    public String updateForm(@PathVariable("id") Long id, Model model) {
+    @GetMapping("admin_member/update/{id}/{state}")
+    public String updateForm(@PathVariable("id") Long id, @PathVariable("state") Long state, Model model) {
         MemberDTO memberDTO = memberService.updateForm(id);
         model.addAttribute("updateMember", memberDTO);
         return "admin_member/update";
@@ -76,9 +73,16 @@ public class MemberController {
 
     // 2. 특정 ID 회원 update
     @PostMapping("admin_member/update")
-    public String update(@ModelAttribute MemberDTO memberDTO) {
+    public String update(@ModelAttribute MemberDTO memberDTO, @RequestParam("state") Long state) {
         memberService.update(memberDTO);
-        return "redirect:/admin_member";
+
+        if(state == 0){
+            System.out.println(state);
+            return "redirect:/admin_member";
+        }else{
+            System.out.println(state);
+            return "redirect:/";
+        }
     }
 
     @GetMapping("admin_member/delete/{id}")

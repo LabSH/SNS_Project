@@ -25,6 +25,9 @@
           <a class="nav-link" th:href="@{/admin}">Admin</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" th:href="@{|/admin_member/update/${session.memberId}/${1}|}">InfoModify</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" th:href="@{/logout}">Logout</a>
         </li>
       </ul>
@@ -32,6 +35,9 @@
       <ul th:unless="${session.logined}" class="navbar-nav ml-auto">
         <li class="nav-item">
           <a class="nav-link" th:href="@{/login}">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/admin_member/create}">Register</a>
         </li>
       </ul>
 

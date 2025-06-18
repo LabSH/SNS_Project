@@ -125,4 +125,5 @@ public class BoardController {
         boardService.deleteById(id);
         return "redirect:/board/myBoard";
     }
+
 }
