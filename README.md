@@ -13,7 +13,7 @@
 
 
 # 💻 기술 스택
-- OS: macOS
+- OS: `macOS`
 - DBMS: `MySQL`
 - 개발 도구: `IntelliJ`
 - 주요 기술: `Java` `Spring Boot` `JPA` `JavaScript` `HTML` `Thymeleaf`
